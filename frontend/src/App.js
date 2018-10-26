@@ -1,31 +1,54 @@
 import React from 'react';
-import Component from '@reactions/component';
-import { TagInput, Pane, Spinner } from 'evergreen-ui';
+import {Pane, Spinner, Heading, Text} from 'evergreen-ui';
+import KeywordInput from './components/KeywordInput';
+import UniversityList from './components/UniversityList';
+import AuthorList from './components/AuthorList';
 
 class App extends React.Component {
   render() {
     return (
-      <div className="max-w-md mx-auto my-3">
-        <h1 className="text-center text-2xl my-4">Wide Challenge</h1>
-        <p className="mb-2">Enter keyword</p>
-        <Component initialState={{ values: ['kertomukset', 'pakinat'] }}>
-          {({ state, setState }) => (
-            <TagInput
-              width="100%"
-              values={state.values}
-              onChange={values => {
-                setState({ values });
-              }}
-            />
-          )}
-        </Component>
+      <div className="">
         <Pane
+          elevation={1}
+          marginBottom={16}
+          padding={16}
           display="flex"
           alignItems="center"
-          justifyContent="center"
-          height={300}
         >
-          <Spinner />
+          <Pane width="25%">
+            <Heading size={600} letterSpacing="2px">
+              WIDE CHALLENGE
+            </Heading>
+            <Text size={300}>
+              See Finnish performance on intertesting keywords
+            </Text>
+          </Pane>
+          <Pane width="75%">
+            <KeywordInput />
+          </Pane>
+        </Pane>
+
+        <Pane display="flex">
+          <Pane width="25%" padding={16}>
+            <Heading is="h3" size={600} marginBottom={16} letterSpacing="2px">
+              Universities
+            </Heading>
+            <UniversityList />
+          </Pane>
+          <Pane width="75%" paddingLeft={16} paddingRight={16}>
+            <Pane
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              height={64}
+            >
+              <Spinner />
+            </Pane>
+            <Heading is="h3" size={600} marginBottom={16} letterSpacing="2px">
+              Authors
+            </Heading>
+            <AuthorList />
+          </Pane>
         </Pane>
       </div>
     );
