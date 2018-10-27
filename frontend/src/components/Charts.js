@@ -4,10 +4,10 @@ import {Pane, Tab, Tablist, Text} from 'evergreen-ui';
 import Component from '@reactions/component';
 import KeywordChart from './KeywordChart';
 import Matrix from './Matrix';
-import mock from './tst.json';
 
 export default function({data}) {
-  if (data == null) return <Text>No data to show</Text>;
+  if (data == null)
+    return <Text>No data to be shown yet. Just try to enter a keyword.</Text>;
 
   return (
     <Component

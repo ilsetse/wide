@@ -9,7 +9,7 @@ class App extends React.Component {
   state = {
     isLoading: false,
     showHelp: false,
-    keywords: ['EEG'],
+    keywords: [],
     data: null,
   };
 
