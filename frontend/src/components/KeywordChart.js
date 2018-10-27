@@ -1,8 +1,8 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
-import DataProcessor from './DataProcessor';
+import processBubbleData from '../helpers/processBubbleData';
 
 export default function KeywordChart(props) {
-  const processed = DataProcessor(props.data);
+  const processed = processBubbleData(props.data);
   return <Plot {...processed} />;
 }
