@@ -7,9 +7,17 @@ import Matrix from './components/Matrix';
 import data from './components/tst.json';
 
 class App extends React.Component {
+  state = {
+    keywords: ['EEG'],
+  };
+
+  doChangeKeyword = (keywords) => {
+    this.setState({keywords});
+  };
+
   render() {
     return (
-      <div className="">
+      <main>
         <Pane
           elevation={1}
           marginBottom={16}
@@ -23,7 +31,10 @@ class App extends React.Component {
             </Heading>
           </Pane>
           <Pane width="75%">
-            <KeywordInput />
+            <KeywordInput
+              values={this.state.keywords}
+              onChange={this.doChangeKeyword}
+            />
           </Pane>
         </Pane>
 
@@ -70,7 +81,7 @@ class App extends React.Component {
             </Pane>
           )}
         </Component>
-      </div>
+      </main>
     );
   }
 }
