@@ -1,7 +1,6 @@
 from app import app
 from flask import jsonify, request
 from scripts.get_org_size_and_comat import *
-import json
 
 @app.route('/query/<beginYear>/<endYear>/<keyword>')
 def query(beginYear, endYear, keyword):
@@ -20,7 +19,6 @@ def query(beginYear, endYear, keyword):
         "bubble" : bubble,
         "comat" : comat
     }
-    tst = {"data": [output]}
-    return json.dumps(tst)
+    return jsonify(output)
 
 
