@@ -3,21 +3,42 @@ import {Pane, Heading, IconButton, Spinner} from 'evergreen-ui';
 import Help from './components/Help';
 import KeywordInput from './components/KeywordInput';
 import Charts from './components/Charts';
+import axios from 'axios';
 
 class App extends React.Component {
   state = {
-    isLoading: true,
+    isLoading: false,
     showHelp: false,
     keywords: ['EEG'],
     data: null,
   };
 
   componentDidMount() {
-    setTimeout(() => this.setState({isLoading: false}), 1000);
+    this.fetchData();
+  }
+
+  fetchData() {
+    const toYear = new Date().getFullYear();
+    const fromYear = toYear - 4;
+    const [keyword] = this.state.keywords;
+    if (keyword == null) return;
+
+    this.setState({isLoading: true});
+    axios
+      .get(
+        `https://aqueous-headland-15358.herokuapp.com/query/${fromYear}/${toYear}/${keyword}`
+      )
+      .then(({data}) => {
+        this.setState({isLoading: false, data});
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({isLoading: false});
+      });
   }
 
   doChangeKeyword = (keywords) => {
-    this.setState({keywords});
+    this.setState({keywords}, this.fetchData);
   };
 
   doCloseHelp = () => this.setState({showHelp: false});
@@ -66,7 +87,7 @@ class App extends React.Component {
             <Spinner />
           </Pane>
         ) : (
-          <Charts />
+          <Charts data={this.state.data} />
         )}
       </main>
     );

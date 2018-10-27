@@ -2,8 +2,6 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 export default function Matrix(props) {
-  console.log(props.data);
-
   const [d] = Object.values(props.data);
   console.log(d);
 

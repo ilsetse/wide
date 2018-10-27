@@ -6,10 +6,8 @@ import KeywordChart from './KeywordChart';
 import Matrix from './Matrix';
 import mock from './tst.json';
 
-export default function(props) {
-  // if (data == null) return <Text>No data to show</Text>;
-  const data = mock.data[0];
-  console.log(data);
+export default function({data}) {
+  if (data == null) return <Text>No data to show</Text>;
 
   return (
     <Component
