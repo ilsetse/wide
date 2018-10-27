@@ -28,6 +28,7 @@ export default function({data}) {
         letterSpacing="2px"
         paddingLeft={16}
         paddingRight={16}
+        marginTop={24}
       >
         CO-OCCURENCE MATRIX
       </Heading>
