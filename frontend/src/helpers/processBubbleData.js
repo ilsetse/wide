@@ -52,6 +52,7 @@ const COLORS = [
   'rgb(44, 160, 101)',
   'rgb(255, 65, 54)',
 ];
+
 export default function(data) {
   let min = Infinity;
   let max = -Infinity;
