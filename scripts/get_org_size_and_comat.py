@@ -11,8 +11,8 @@ from finna_client import FinnaSearchType as fst
 #### USER INPUT / PARAMETERS ####             # SLIDER
 #################################
 
+fc = fc() 
 
-fc = fc()
 # input: int year
 # output: int total entries by year
 def get_total_entries_by_yr(year):
@@ -24,10 +24,11 @@ def get_total_entries_by_yr(year):
            limit=100)['resultCount']
 
 
-def get_response(pg, search_query):
+def get_response(pg, search_query, year):
     return fc.search(lookfor=search_query,
            search_type=fst.Subject,
            fields=["title", "buildings", "subjects"],
+           filters=[("main_date_str:"+str(year))],
            facets=["author"],
            page=pg,
            limit=100)
@@ -40,29 +41,29 @@ def get_entries(year, search_query):
     results = []
     while True:
         try:
-            response = get_response(total_pages, search_query)
+            response = get_response(total_pages, search_query, year)
             results += response['records']
             total_pages += 1
 
             # stopping condition
             if len(results) >= response['resultCount']:
-                break
-
+                break     
+                
         except:
             print("num collected entries: ", len(results))
             print("num expected entries: ", response['resultCount'])
             break
-
+    
     num_search_queries = len(results)
-
+            
     data = json.dumps(results)
     df = pd.read_json(data)
-
+    
     return df
 
 def get_num_entry_by_org_size_scores(df, year):
     num_search_queries = len(df)
-
+    
     buildings = []
 
     for i in range(num_search_queries):
@@ -84,7 +85,7 @@ def get_num_entry_by_org_size_scores(df, year):
         "institutions" : institutions,
         "size_values" : size_values
     }
-
+    
     return json_data
 
 
@@ -139,7 +140,7 @@ def get_cooccurrence_matrix(df):
         "data": co_mat.values.tolist(),
         "label": key_subjects
     }
-
+    
     return comat_json
 
 #df = get_entries()

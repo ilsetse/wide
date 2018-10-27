@@ -15,7 +15,6 @@ def query(beginYear, endYear, keyword):
         bubble[str(year)] = get_num_entry_by_org_size_scores(df[str(year)], year)
         comat[str(year)] = get_cooccurrence_matrix(df[str(year)])
 
-    print(type(comat))
 
     output = {
         "bubble" : bubble,
