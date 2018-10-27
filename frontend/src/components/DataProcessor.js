@@ -73,7 +73,7 @@ export default function(data) {
   }));
 
   const layout = {
-    width: document.body.clientWidth - 16,
+    width: document.body.clientWidth - 64,
     height: 600,
     xaxis: {
       showgrid: false,
