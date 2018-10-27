@@ -6,15 +6,15 @@ import KeywordChart from './KeywordChart';
 import Matrix from './Matrix';
 import mock from './tst.json';
 
-export default function({data}) {
-  if (data == null) return <Text>No data to show</Text>;
-
-  data = mock;
+export default function(props) {
+  // if (data == null) return <Text>No data to show</Text>;
+  const data = mock.data[0];
+  console.log(data);
 
   return (
     <Component
       initialState={{
-        selectedIndex: 0,
+        selectedIndex: 1,
         tabs: ['Bubble Chart', 'Co-occurrence Matrix'],
       }}
     >
@@ -45,9 +45,9 @@ export default function({data}) {
                 display={index === state.selectedIndex ? 'block' : 'none'}
               >
                 {index === 0 ? (
-                  <KeywordChart data={data.data[0]} />
+                  <KeywordChart data={data.bubble} />
                 ) : (
-                  <Matrix />
+                  <Matrix data={data.comat} />
                 )}
               </Pane>
             ))}
