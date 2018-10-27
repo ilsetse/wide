@@ -1,17 +1,20 @@
 import React from 'react';
-import Component from '@reactions/component';
-import {Pane, Heading, Tab, Tablist, IconButton} from 'evergreen-ui';
+import {Pane, Heading, IconButton, Spinner} from 'evergreen-ui';
 import Help from './components/Help';
 import KeywordInput from './components/KeywordInput';
-import KeywordChart from './components/KeywordChart';
-import Matrix from './components/Matrix';
-import data from './components/tst.json';
+import Charts from './components/Charts';
 
 class App extends React.Component {
   state = {
+    isLoading: true,
     showHelp: false,
     keywords: ['EEG'],
+    data: null,
   };
+
+  componentDidMount() {
+    setTimeout(() => this.setState({isLoading: false}), 1000);
+  }
 
   doChangeKeyword = (keywords) => {
     this.setState({keywords});
@@ -52,50 +55,19 @@ class App extends React.Component {
             />
           </Pane>
         </Pane>
-
-        <Component
-          initialState={{
-            selectedIndex: 0,
-            tabs: ['Bubble Chart', 'Co-occurrence Matrix'],
-          }}
-        >
-          {({state, setState}) => (
-            <Pane paddingLeft={16} paddingRight={16}>
-              <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
-                {state.tabs.map((tab, index) => (
-                  <Tab
-                    key={tab}
-                    id={tab}
-                    onSelect={() => setState({selectedIndex: index})}
-                    isSelected={index === state.selectedIndex}
-                    aria-controls={`panel-${tab}`}
-                  >
-                    {tab}
-                  </Tab>
-                ))}
-              </Tablist>
-
-              <Pane padding={16} background="tint1">
-                {state.tabs.map((tab, index) => (
-                  <Pane
-                    key={tab}
-                    id={`panel-${tab}`}
-                    role="tabpanel"
-                    aria-labelledby={tab}
-                    aria-hidden={index !== state.selectedIndex}
-                    display={index === state.selectedIndex ? 'block' : 'none'}
-                  >
-                    {index === 0 ? (
-                      <KeywordChart data={data.data[0]} />
-                    ) : (
-                      <Matrix />
-                    )}
-                  </Pane>
-                ))}
-              </Pane>
-            </Pane>
-          )}
-        </Component>
+        {this.state.isLoading ? (
+          <Pane
+            width="100%"
+            height={120}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Spinner />
+          </Pane>
+        ) : (
+          <Charts />
+        )}
       </main>
     );
   }
