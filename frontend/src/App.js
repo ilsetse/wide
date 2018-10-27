@@ -1,8 +1,8 @@
 import React from 'react';
-import {Pane, Spinner, Heading, Text} from 'evergreen-ui';
+import {Pane, Heading, Text} from 'evergreen-ui';
 import KeywordInput from './components/KeywordInput';
 import UniversityList from './components/UniversityList';
-import AuthorList from './components/AuthorList';
+import KeywordChart from './components/KeywordChart';
 
 class App extends React.Component {
   render() {
@@ -31,23 +31,11 @@ class App extends React.Component {
         <Pane display="flex">
           <Pane width="25%" padding={16}>
             <Heading is="h3" size={600} marginBottom={16} letterSpacing="2px">
-              Universities
+              Customize
             </Heading>
-            <UniversityList />
           </Pane>
           <Pane width="75%" paddingLeft={16} paddingRight={16}>
-            <Pane
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              height={64}
-            >
-              <Spinner />
-            </Pane>
-            <Heading is="h3" size={600} marginBottom={16} letterSpacing="2px">
-              Authors
-            </Heading>
-            <AuthorList />
+            <KeywordChart />
           </Pane>
         </Pane>
       </div>
