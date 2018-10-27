@@ -71,4 +71,11 @@ def get_num_entry_by_org_size_scores(year):
     return num_entry_by_org_size_scores
 
 
-get_num_entry_by_org_size_scores(2017)
+
+
+if __name__ == '__main__':
+    res = []
+    for year in range( 2010, 2019):
+        res.append(  get_num_entry_by_org_size_scores(year))
+
+    print(res)
