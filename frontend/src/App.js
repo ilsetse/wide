@@ -4,6 +4,7 @@ import {Pane, Heading, Tab, Tablist} from 'evergreen-ui';
 import KeywordInput from './components/KeywordInput';
 import KeywordChart from './components/KeywordChart';
 import Matrix from './components/Matrix';
+import data from './components/tst.json';
 
 class App extends React.Component {
   render() {
@@ -28,7 +29,7 @@ class App extends React.Component {
 
         <Component
           initialState={{
-            selectedIndex: 1,
+            selectedIndex: 0,
             tabs: ['Bubble Chart', 'Co-occurrence Matrix'],
           }}
         >
@@ -58,7 +59,11 @@ class App extends React.Component {
                     aria-hidden={index !== state.selectedIndex}
                     display={index === state.selectedIndex ? 'block' : 'none'}
                   >
-                    {index === 0 ? <KeywordChart /> : <Matrix />}
+                    {index === 0 ? (
+                      <KeywordChart data={data.data[0]} />
+                    ) : (
+                      <Matrix />
+                    )}
                   </Pane>
                 ))}
               </Pane>
