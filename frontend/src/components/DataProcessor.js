@@ -1,59 +1,85 @@
+const COLORS = [
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+  '#de425b',
+  'rgb(93, 164, 214)',
+  'rgb(255, 144, 14)',
+  'rgb(44, 160, 101)',
+  'rgb(255, 65, 54)',
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+  '#de425b',
+  'rgb(93, 164, 214)',
+  'rgb(255, 144, 14)',
+  'rgb(44, 160, 101)',
+  'rgb(255, 65, 54)',
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+  '#de425b',
+  'rgb(93, 164, 214)',
+  'rgb(255, 144, 14)',
+  'rgb(44, 160, 101)',
+  'rgb(255, 65, 54)',
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+  '#de425b',
+  'rgb(93, 164, 214)',
+  'rgb(255, 144, 14)',
+  'rgb(44, 160, 101)',
+  'rgb(255, 65, 54)',
+];
 export default function(data) {
-  function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-  }
+  let min = Infinity;
+  let max = -Infinity;
 
-  const text = [
-    'University of Helsinki',
-    'Åbo Akademi University',
-    'University of Turku',
-    'University of Tampere',
-    'University of Jyväskylä',
-    'University of Oulu',
-    'University of Vaasa',
-    'University of Lapland',
-    'University of Eastern Finland',
-    'Aalto University',
-  ];
+  const frames = Object.entries(data).map(
+    ([year, {institutions, size_values}]) => {
+      min = Math.min(min, ...size_values);
+      max = Math.max(max, ...size_values);
 
-  const color = [
-    '#003f5c',
-    '#2f4b7c',
-    '#665191',
-    '#a05195',
-    '#d45087',
-    '#f95d6a',
-    '#ff7c43',
-    '#ffa600',
-    '#de425b',
-    'rgb(93, 164, 214)',
-    'rgb(255, 144, 14)',
-    'rgb(44, 160, 101)',
-    'rgb(255, 65, 54)',
-  ];
+      const opacity = Array.from({length: institutions.length}, () => 0.8);
 
-  const opacity = Array.from({length: color.length}, () => 0.8);
-
-  const frames = Array.from({length: 10}, (_, i) => {
-    const y = Array.from({length: text.length}, () => getRandomInt(0, 30));
-    return {
-      name: 2004 + i,
-      data: [
-        {
-          y,
-          text,
-          mode: 'markers',
-          marker: {
-            color,
-            opacity,
-            size: y.map((x) => x * 3),
+      return {
+        name: year,
+        data: [
+          {
+            text: institutions,
+            y: size_values,
+            mode: 'markers',
+            marker: {
+              color: COLORS,
+              opacity,
+              size: size_values.map((x) => x * 3),
+            },
           },
-        },
-      ],
-    };
-  });
+        ],
+      };
+    }
+  );
 
   // Now create slider steps, one for each frame. The slider
   // executes a plotly.js API command (here, Plotly.animate).
@@ -85,7 +111,7 @@ export default function(data) {
       // range: [30, 85],
     },
     yaxis: {
-      range: [0, 50],
+      range: [Math.floor(min) - 20, Math.ceil(max) + 20],
     },
     hovermode: 'closest',
     // We'll use updatemenus (whose functionality includes menus as
