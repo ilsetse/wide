@@ -1,21 +1,27 @@
 from app import app
 from flask import jsonify, request
 from scripts.get_org_size_and_comat import *
-
+import json
 
 @app.route('/query/<beginYear>/<endYear>/<keyword>')
 def query(beginYear, endYear, keyword):
-    #search_query = request.args.get('query')
-    print(beginYear, endYear, keyword)
+    #print(beginYear, endYear, keyword)
     bubble = {}
-    years = [2016, 2017]
-    for year in years:
+    comat = {}
+    df = {}
+    for year in range(int(beginYear), int(endYear)+1):
         print(year)
-        df = get_entries(year, keyword)
-        tmp = get_num_entry_by_org_size_scores(df, year)
-        bubble[str(year)] = tmp
+        df[str(year)] = get_entries(year, keyword)
+        bubble[str(year)] = get_num_entry_by_org_size_scores(df[str(year)], year)
+        comat[str(year)] = get_cooccurrence_matrix(df[str(year)])
 
-    tst = {"data": [bubble]}
-    return jsonify(tst)
+    print(type(comat))
+
+    output = {
+        "bubble" : bubble,
+        "comat" : comat
+    }
+    tst = {"data": [output]}
+    return json.dumps(tst)
 
 

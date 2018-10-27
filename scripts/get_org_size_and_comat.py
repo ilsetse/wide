@@ -136,7 +136,7 @@ def get_cooccurrence_matrix(df):
     np.fill_diagonal(co_mat.values, 0) # fill diagonal with 0
 
     comat_json = {
-        "data": co_mat.values,
+        "data": co_mat.values.tolist(),
         "label": key_subjects
     }
 
