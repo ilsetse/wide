@@ -75,8 +75,19 @@ def get_num_entry_by_org_size_scores(df, year):
     by_org_size_scores = [np.sqrt(x/num_search_queries)*100 for x in num_entries_by_org]
 
     num_entry_by_org_size_scores = list(zip(unique_org, by_org_size_scores))
+    
+    institutions = []
+    size_values = []
+    for i in range(len(num_entry_by_org_size_scores)):
+        institutions.append(num_entry_by_org_size_scores[i][0])
+        size_values.append(num_entry_by_org_size_scores[i][1])
 
-    return num_entry_by_org_size_scores
+    json_data = {
+        "institutions" : institutions,
+        "size_values" : size_values
+    }
+    
+    return json_data 
 
 
 # co-occurrence matrix, work from 2000 - 2018
