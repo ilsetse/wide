@@ -126,7 +126,12 @@ def get_cooccurrence_matrix(df):
     co_mat = pd.DataFrame(mat.T.dot(mat), columns=key_subjects).astype(int)
     np.fill_diagonal(co_mat.values, 0) # fill diagonal with 0
 
-    return co_mat
+    comat_json = {
+        "data": co_mat.values,
+        "label": key_subjects
+    }
+
+    return comat_json
 
 #df = get_entries()
 #get_num_entry_by_org_size_scores(df, year)
