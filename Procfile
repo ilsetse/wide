@@ -1,1 +1,1 @@
-gunicorn microblog:app
+web: gunicorn microblog:app
