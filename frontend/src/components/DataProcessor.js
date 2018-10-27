@@ -1,80 +1,69 @@
 export default function(data) {
-  // Create a lookup table to sort and regroup the columns of data,
-  // first by year, then by continent:
-  var lookup = {};
-  function getData(year, continent) {
-    var byYear, trace;
-    if (!(byYear = lookup[year])) {
-      byYear = lookup[year] = {};
-    }
-    // If a container for this year + continent doesn't exist yet,
-    // then create one:
-    if (!(trace = byYear[continent])) {
-      trace = byYear[continent] = {
-        x: [],
-        y: [],
-        id: [],
-        text: [],
-        marker: {size: []},
-      };
-    }
-    return trace;
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
-  // Go through each row, get the right trace, and append the data:
-  for (var i = 0; i < data.length; i++) {
-    var datum = data[i];
-    var trace = getData(datum.year, datum.continent);
-    trace.text.push(datum.country);
-    trace.id.push(datum.country);
-    trace.x.push(datum.lifeExp);
-    trace.y.push(datum.gdpPercap);
-    trace.marker.size.push(datum.pop);
-  }
+  const text = [
+    'University of Helsinki',
+    'Åbo Akademi University',
+    'University of Turku',
+    'University of Tampere',
+    'University of Jyväskylä',
+    'University of Oulu',
+    'University of Vaasa',
+    'University of Lapland',
+    'University of Eastern Finland',
+    'Aalto University',
+  ];
 
-  // Get the group names:
-  const years = Object.keys(lookup);
-  // In this case, every year includes every continent, so we
-  // can just infer the continents from the *first* year:
-  const firstYear = lookup[years[0]];
-  const continents = Object.keys(firstYear);
+  const color = [
+    '#003f5c',
+    '#2f4b7c',
+    '#665191',
+    '#a05195',
+    '#d45087',
+    '#f95d6a',
+    '#ff7c43',
+    '#ffa600',
+    '#de425b',
+    'rgb(93, 164, 214)',
+    'rgb(255, 144, 14)',
+    'rgb(44, 160, 101)',
+    'rgb(255, 65, 54)',
+  ];
 
-  // Create the main traces, one for each continent:
-  const traces = continents.map((name) => {
-    const data = firstYear[name];
+  const opacity = Array.from({length: color.length}, () => 0.8);
+
+  const frames = Array.from({length: 10}, (_, i) => {
+    const y = Array.from({length: text.length}, () => getRandomInt(0, 30));
     return {
-      name,
-      x: [...data.x],
-      y: [...data.y],
-      id: [...data.id],
-      text: [...data.text],
-      mode: 'markers',
-      marker: {
-        size: [...data.marker.size],
-        sizemode: 'area',
-        sizeref: 100000,
-      },
+      name: 2004 + i,
+      data: [
+        {
+          y,
+          text,
+          mode: 'markers',
+          marker: {
+            color,
+            opacity,
+            size: y.map((x) => x * 3),
+          },
+        },
+      ],
     };
   });
-
-  // Create a frame for each year. Frames are effectively just
-  // traces, except they don't need to contain the *full* trace
-  // definition (for example, appearance). The frames just need
-  // the parts the traces that change (here, the data).
-  const frames = years.map((name) => ({
-    name,
-    data: continents.map((continent) => getData(name, continent)),
-  }));
 
   // Now create slider steps, one for each frame. The slider
   // executes a plotly.js API command (here, Plotly.animate).
   // In this example, we'll animate to one of the named frames
   // created in the above loop.
-  const sliderSteps = years.map((year) => ({
+  const sliderSteps = frames.map(({name}) => ({
     method: 'animate',
-    label: year,
+    label: name,
     args: [
-      [year],
+      [name],
       {
         mode: 'immediate',
         transition: {duration: 300},
@@ -93,10 +82,10 @@ export default function(data) {
       autotick: true,
       ticks: '',
       showticklabels: false,
-      range: [30, 85],
+      // range: [30, 85],
     },
     yaxis: {
-      zeroline: false,
+      range: [0, 50],
     },
     hovermode: 'closest',
     // We'll use updatemenus (whose functionality includes menus as
@@ -128,19 +117,7 @@ export default function(data) {
                 frame: {duration: 500, redraw: false},
               },
             ],
-            label: 'Play',
-          },
-          {
-            method: 'animate',
-            args: [
-              [null],
-              {
-                mode: 'immediate',
-                transition: {duration: 0},
-                frame: {duration: 0, redraw: false},
-              },
-            ],
-            label: 'Pause',
+            label: 'Autoplay',
           },
         ],
       },
@@ -161,7 +138,5 @@ export default function(data) {
     ],
   };
 
-  console.log(traces, frames);
-
-  return {data: traces, layout, frames};
+  return {data: frames[0].data, layout, frames};
 }
