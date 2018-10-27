@@ -1,7 +1,9 @@
 import React from 'react';
-import {Pane, Heading, Text} from 'evergreen-ui';
+import Component from '@reactions/component';
+import {Pane, Heading, Tab, Tablist} from 'evergreen-ui';
 import KeywordInput from './components/KeywordInput';
 import KeywordChart from './components/KeywordChart';
+import Matrix from './components/Matrix';
 
 class App extends React.Component {
   render() {
@@ -24,7 +26,45 @@ class App extends React.Component {
           </Pane>
         </Pane>
 
-        <KeywordChart />
+        <Component
+          initialState={{
+            selectedIndex: 1,
+            tabs: ['Bubble Chart', 'Co-occurrence Matrix'],
+          }}
+        >
+          {({state, setState}) => (
+            <Pane paddingLeft={16} paddingRight={16}>
+              <Tablist marginBottom={16} flexBasis={240} marginRight={24}>
+                {state.tabs.map((tab, index) => (
+                  <Tab
+                    key={tab}
+                    id={tab}
+                    onSelect={() => setState({selectedIndex: index})}
+                    isSelected={index === state.selectedIndex}
+                    aria-controls={`panel-${tab}`}
+                  >
+                    {tab}
+                  </Tab>
+                ))}
+              </Tablist>
+
+              <Pane padding={16} background="tint1">
+                {state.tabs.map((tab, index) => (
+                  <Pane
+                    key={tab}
+                    id={`panel-${tab}`}
+                    role="tabpanel"
+                    aria-labelledby={tab}
+                    aria-hidden={index !== state.selectedIndex}
+                    display={index === state.selectedIndex ? 'block' : 'none'}
+                  >
+                    {index === 0 ? <KeywordChart /> : <Matrix />}
+                  </Pane>
+                ))}
+              </Pane>
+            </Pane>
+          )}
+        </Component>
       </div>
     );
   }
