@@ -35,26 +35,36 @@ def get_response(pg):
            limit=100)
 
 
-def get_num_entry_by_org_size_scores(year):
-
+def get_entries():
     total_entries_in_yr = get_total_entries_by_yr(year)
 
     total_pages = 0
     results = []
     while True:
-        response = get_response(total_pages)
-        results += response['records']
-        total_pages += 1
+        try:
+            response = get_response(total_pages)
+            results += response['records']
+            total_pages += 1
 
-        # stopping condition
-        if len(results) == response['resultCount']:
+            # stopping condition
+            if len(results) >= response['resultCount']:
+                break     
+                
+        except:
+            print("num collected entries: ", len(results))
+            print("num expected entries: ", response['resultCount'])
             break
-
+    
     num_search_queries = len(results)
-
+            
     data = json.dumps(results)
     df = pd.read_json(data)
+    
+    return df
 
+def get_num_entry_by_org_size_scores(df, year):
+    num_search_queries = len(df)
+    
     buildings = []
 
     for i in range(num_search_queries):
@@ -68,10 +78,9 @@ def get_num_entry_by_org_size_scores(year):
 
     return num_entry_by_org_size_scores
 
-# co-occurrence matrix, work from 2000 - 2018
-def get_cooccurrence_matrix():
-    df = get_entries()
 
+# co-occurrence matrix, work from 2000 - 2018
+def get_cooccurrence_matrix(df):
     #df['subjects'].apply(pd.Series).stack().unique()
     #list(set([a for b in df.val.tolist() for a in b]))
 
@@ -97,9 +106,8 @@ def get_cooccurrence_matrix():
 
     # more data cleaning -> plural cases
 
-    # get the top 50 commonly seen keywords occurring with the search query
-    TOP_VALUES = 50
-
+    # get the top commonly seen keywords occurring with the search query
+    TOP_VALUES = 10
 
     key_subjects = []
     for i in range(TOP_VALUES):
@@ -120,6 +128,9 @@ def get_cooccurrence_matrix():
 
     return co_mat
 
+#df = get_entries()
+#get_num_entry_by_org_size_scores(df, year)
+#get_cooccurrence_matrix(df)
 
 if __name__ == '__main__':
     res = []
