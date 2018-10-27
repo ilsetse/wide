@@ -115,45 +115,11 @@ export default function(data) {
       range: [Math.floor(min) - 20, Math.ceil(max) + 20],
     },
     hovermode: 'closest',
-    // We'll use updatemenus (whose functionality includes menus as
-    // well as buttons) to create a play button and a pause button.
-    // The play button works by passing `null`, which indicates that
-    // Plotly should animate all frames. The pause button works by
-    // passing `[null]`, which indicates we'd like to interrupt any
-    // currently running animations with a new list of frames. Here
-    // The new list of frames is empty, so it halts the animation.
-    updatemenus: [
-      {
-        x: 0,
-        y: 0,
-        yanchor: 'top',
-        xanchor: 'left',
-        showactive: false,
-        direction: 'left',
-        type: 'buttons',
-        pad: {t: 87, r: 10},
-        buttons: [
-          {
-            method: 'animate',
-            args: [
-              null,
-              {
-                mode: 'immediate',
-                fromcurrent: true,
-                transition: {duration: 300},
-                frame: {duration: 500, redraw: false},
-              },
-            ],
-            label: 'Autoplay',
-          },
-        ],
-      },
-    ],
     // Finally, add the slider and use `pad` to position it
     // nicely next to the buttons.
     sliders: [
       {
-        pad: {l: 130, t: 55},
+        pad: {l: 0, t: 55},
         currentvalue: {
           visible: true,
           prefix: 'Year:',
