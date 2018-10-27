@@ -8,8 +8,6 @@ from finna_client import FinnaClient as fc
 from finna_client import FinnaSearchType as fst
 
 #################################
-
-
 #### USER INPUT / PARAMETERS ####
 search_query = "EEG"
 year = 2017              # SLIDER
@@ -70,7 +68,57 @@ def get_num_entry_by_org_size_scores(year):
 
     return num_entry_by_org_size_scores
 
+# co-occurrence matrix, work from 2000 - 2018
+def get_cooccurrence_matrix():
+    df = get_entries()
 
+    #df['subjects'].apply(pd.Series).stack().unique()
+    #list(set([a for b in df.val.tolist() for a in b]))
+
+    # toy example
+    # sample = [[[1]],[[1,1]],[[1,1,1]]]
+    # pd.DataFrame(sample).values.argmax()
+
+    #num_search_queries = len(df)
+    #idx_of_max_num_subjects = df['subjects'].values.argmax()
+    #len(df.loc[idx_of_max_num_subjects]['subjects'])
+
+    # to lowercase and strip ( . )
+    # toy example
+    # sample = [[[["Aa"]]],[[["Bb"]]],[[["Cc."],["Dd"]]]]
+    # pd.DataFrame(sample).loc[2][0][0][0].lower().replace('.','')
+
+    subjects = [a[0].lower().replace('.','') for b in df['subjects'].tolist() for a in b]
+
+    unique_subject_list = list(set(subjects))
+    len(unique_subject_list)
+
+    subject_frequency = Counter(subjects).most_common() # counts the elements' frequency
+
+    # more data cleaning -> plural cases
+
+    # get the top 50 commonly seen keywords occurring with the search query
+    TOP_VALUES = 50
+
+
+    key_subjects = []
+    for i in range(TOP_VALUES):
+        key_subjects.append(subject_frequency[i][0])
+
+    mat = np.zeros((len(df['subjects']), len(key_subjects)))
+
+
+    #subjects_by_publication
+    for x in range(len(df['subjects'])):
+        for y in range(len(key_subjects)):
+            for idx in range(len(df['subjects'][x])):
+                if df['subjects'][x][idx][0].lower().replace('.','') == key_subjects[y]:
+                    mat[x][y] += 1
+
+    co_mat = pd.DataFrame(mat.T.dot(mat), columns=key_subjects).astype(int)
+    np.fill_diagonal(co_mat.values, 0) # fill diagonal with 0
+
+    return co_mat
 
 
 if __name__ == '__main__':
