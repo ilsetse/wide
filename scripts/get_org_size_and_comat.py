@@ -8,9 +8,7 @@ from finna_client import FinnaClient as fc
 from finna_client import FinnaSearchType as fst
 
 #################################
-#### USER INPUT / PARAMETERS ####
-search_query = "EEG"
-year = 2017              # SLIDER
+#### USER INPUT / PARAMETERS ####             # SLIDER
 #################################
 
 
@@ -26,7 +24,7 @@ def get_total_entries_by_yr(year):
            limit=100)['resultCount']
 
 
-def get_response(pg):
+def get_response(pg, search_query):
     return fc.search(lookfor=search_query,
            search_type=fst.Subject,
            fields=["title", "buildings", "subjects"],
@@ -35,14 +33,14 @@ def get_response(pg):
            limit=100)
 
 
-def get_entries(year):
+def get_entries(year, search_query):
     total_entries_in_yr = get_total_entries_by_yr(year)
 
     total_pages = 0
     results = []
     while True:
         try:
-            response = get_response(total_pages)
+            response = get_response(total_pages, search_query)
             results += response['records']
             total_pages += 1
 
@@ -149,8 +147,4 @@ def get_cooccurrence_matrix(df):
 #get_cooccurrence_matrix(df)
 
 if __name__ == '__main__':
-    res = []
-    for year in range( 2010, 2019):
-        res.append(  get_num_entry_by_org_size_scores(year))
-
-    print(res)
+    pass
