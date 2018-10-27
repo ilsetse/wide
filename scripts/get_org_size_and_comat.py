@@ -35,7 +35,7 @@ def get_response(pg):
            limit=100)
 
 
-def get_entries():
+def get_entries(year):
     total_entries_in_yr = get_total_entries_by_yr(year)
 
     total_pages = 0
@@ -48,23 +48,23 @@ def get_entries():
 
             # stopping condition
             if len(results) >= response['resultCount']:
-                break     
-                
+                break
+
         except:
             print("num collected entries: ", len(results))
             print("num expected entries: ", response['resultCount'])
             break
-    
+
     num_search_queries = len(results)
-            
+
     data = json.dumps(results)
     df = pd.read_json(data)
-    
+
     return df
 
 def get_num_entry_by_org_size_scores(df, year):
     num_search_queries = len(df)
-    
+
     buildings = []
 
     for i in range(num_search_queries):
@@ -75,7 +75,7 @@ def get_num_entry_by_org_size_scores(df, year):
     by_org_size_scores = [np.sqrt(x/num_search_queries)*100 for x in num_entries_by_org]
 
     num_entry_by_org_size_scores = list(zip(unique_org, by_org_size_scores))
-    
+
     institutions = []
     size_values = []
     for i in range(len(num_entry_by_org_size_scores)):
@@ -86,8 +86,8 @@ def get_num_entry_by_org_size_scores(df, year):
         "institutions" : institutions,
         "size_values" : size_values
     }
-    
-    return json_data 
+
+    return json_data
 
 
 # co-occurrence matrix, work from 2000 - 2018
