@@ -26,21 +26,27 @@ def query(beginYear, endYear, keyword):
 def query2(beginYear, endYear, keyword):
     for year in range(int(beginYear) , int(endYear)):
         result = get_and_beautify_data_from_api(lookfor=keyword, year=year)
-        if result['records'][0] != 0:
-            orgs_count = count_orgs(result['records'])#for bubble chart
-            subjects_count = count_subjects(result['records'])
+        if result['records'][0]  != 0:
+            orgs_count            = count_orgs(result['records'])#for bubble chart
+            subjects_count        = count_subjects(result['records'])
             cooccurence_with_keys = count_subjects_presented_together_one_publishcation(result['records'], subjects_count)
-            cooc_matrix = cooccurence_matrix(cooccurence_with_keys)#For heatmap chart
-            print("Organizations: {}\nRelated subjects: {}".format(orgs_count, list(subjects_count.keys())))
+            cooc_matrix           = cooccurence_matrix(cooccurence_with_keys)#For heatmap chart
+
+            subject_scores        = subject_scoring(cooc_matrix)
+            subject_scores_full   = dict(zip(subjects_count.keys() , subject_scores))
+            top_50_subjects       = [[k, subject_scores_full[k]] for k in sorted(subject_scores_full, key=subject_scores_full.get, reverse=True)][:50]
+            top_10_orgs           = [[k, orgs_count[k]] for k in sorted(orgs_count, key=orgs_count.get, reverse=True)][:10]
+
+            print("Organizations: {}\nRelated subjects: {}".format(top_10_orgs, top_50_subjects))
         else:
-            orgs_count  = [0]
+            top_50_subjects  = [0]
             #cooc_matrix = [0]
-            cooccurence_with_keys = [0]
+            top_10_orgs = [0]
             print("No result!!!!!")
 
         output = {
-            "bubble": orgs_count,
-            "commat": cooccurence_with_keys
+            "bubble": top_10_orgs,
+            "commat": top_50_subjects
         }
 
         return jsonify(output)

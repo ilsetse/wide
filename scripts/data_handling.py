@@ -66,14 +66,25 @@ def cooccurence_matrix(cooccurence_with_keys):
         cooc_matrix.append(x_tmp)
     return cooc_matrix
 
+def subject_scoring(cooc_matrix):
+    subject_scores = [ ]
+    for subject in cooc_matrix:
+        subject_scores.append(sum(subject))
+    return subject_scores
 
 if __name__ == '__main__':
     result = get_and_beautify_data_from_api(lookfor="vietnam", year="2015")
     if result['records'][0] != 0:
-        orgs_count = count_orgs(result['records'])#for bubble chart
-        subjects_count = count_subjects(result['records'])
+        orgs_count            = count_orgs(result['records'])#for bubble chart
+        subjects_count        = count_subjects(result['records'])
         cooccurence_with_keys = count_subjects_presented_together_one_publishcation(result['records'], subjects_count)
-        cooc_matrix = cooccurence_matrix(cooccurence_with_keys)#For heatmap chart
-        print("Organizations: {}\nRelated subjects: {}".format(orgs_count, list(subjects_count.keys())))
+        cooc_matrix           = cooccurence_matrix(cooccurence_with_keys)#For heatmap chart
+
+        subject_scores        = subject_scoring(cooc_matrix)
+        subject_scores_full   = dict(zip(subjects_count.keys() , subject_scores))
+        top_50_subjects       = [[k, subject_scores_full[k]] for k in sorted(subject_scores_full, key=subject_scores_full.get, reverse=True)][:50]
+        top_10_orgs           = [[k, orgs_count[k]] for k in sorted(orgs_count, key=orgs_count.get, reverse=True)][:10]
+
+        print("Organizations: {}\nRelated subjects: {}".format(top_10_orgs, top_50_subjects))
     else:
         print("No result!!!!!")
