@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pane, Heading, IconButton, Spinner} from 'evergreen-ui';
+import {Pane, Heading, IconButton, Spinner, Text} from 'evergreen-ui';
 import Help from './components/Help';
 import KeywordInput from './components/KeywordInput';
 import Charts from './components/Charts';
@@ -83,8 +83,15 @@ class App extends React.Component {
             display="flex"
             alignItems="center"
             justifyContent="center"
+            flexDirection="column"
           >
             <Spinner />
+            <Text size={500} marginTop={24}>
+              May take a bit of time. Kahvia?{' '}
+              <span role="img" aria-label="coffee">
+                ☕️
+              </span>
+            </Text>
           </Pane>
         ) : (
           <Charts data={this.state.data} />
